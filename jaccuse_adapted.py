@@ -236,20 +236,14 @@ def jaccuse() -> None:
     while True:  # Main game loop.
         if_game_over(end_time, accusations_left)
 
-        print()
         minutes_left = int(end_time - time.time()) // 60
         seconds_left = int(end_time - time.time()) % 60
-        print(f'Time left: {minutes_left} min, {seconds_left} sec')
+        print(f'\nTime left: {minutes_left} min, {seconds_left} sec')
 
         if current_location == 'TAXI':
             print(' You are in your TAXI. Where do you want to go?')
             for place in sorted(PLACES):
-
-                if place in visited_places:
-                    place_info = visited_places[place]
-                    location_label = '(' + place[0] + ')' + place[1:]
-                    spacing = " " * (LONGEST_PLACE_NAME_LENGTH - len(place))
-                    print(f'{location_label} {spacing}{place_info}')
+                print_visited_places(place)
             print('(Q)UIT GAME')
             response = asktaxi()
             current_location = TAXI_MENU_OPTIONS[response]
@@ -272,10 +266,11 @@ def jaccuse() -> None:
 
         # If the player has accused this person wrongly before, they won't give clues:
         if the_person_here in accused_suspects:
-            print('They are offended that you accused them,')
-            print('and will not help with your investigation.')
-            print('You go back to your TAXI.')
-            print()
+            prompt = f'\nThey are offended that you accused them \n' \
+                     f'and will not help with your investigation.\n' \
+                     f'You go back to your TAXI.\n\n'
+
+            print(prompt)
             input('Press Enter to continue...')
             current_location = 'TAXI'
             continue  # Go back to the start of the main game loop.
@@ -302,6 +297,14 @@ def jaccuse() -> None:
             interviewee_response(clues, response, the_item_here, the_person_here)
 
         input('Press Enter to continue...')
+
+
+def print_visited_places(place):
+    if place in visited_places:
+        place_info = visited_places[place]
+        location_label = '(' + place[0] + ')' + place[1:]
+        spacing = " " * (LONGEST_PLACE_NAME_LENGTH - len(place))
+        print(f'{location_label} {spacing}{place_info}')
 
 
 def interviewee_response(clues, response, the_item_here, the_person_here):
