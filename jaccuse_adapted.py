@@ -23,12 +23,8 @@ PLACES: list[str] = ['ZOO', 'OLD BARN', 'DUCK POND', 'CITY HALL', 'HIPSTER CAFE'
 TIME_TO_SOLVE: int = 300  # 300 seconds (5 minutes) to solve the game.
 
 # First letters and longest length of places are needed for menu display:
-TAXI_MENU_OPTIONS: dict = {}
-LONGEST_PLACE_NAME_LENGTH: int = 0
-for place in PLACES:
-    TAXI_MENU_OPTIONS[place[0]] = place
-    if len(place) > LONGEST_PLACE_NAME_LENGTH:
-        LONGEST_PLACE_NAME_LENGTH = len(place)
+LONGEST_PLACE_NAME_LENGTH: int = max(places, key=len)
+TAXI_MENU_OPTIONS: list = [place[0] for place in PLACES]
 
 # Common indexes link these; e.g. SUSPECTS[0] and ITEMS[0] are at PLACES[0].
 random.shuffle(SUSPECTS)
@@ -45,9 +41,8 @@ accused_suspects: list[str] = []  # Accused suspects won't offer clues.
 current_location: str = 'TAXI'
 
 
-
-
 def truth_clues() -> dict:
+    # set-up interviewees have answers to both suspects and items
     clues = {}
     for i, interviewee in enumerate(SUSPECTS):
         if interviewee in liars:
