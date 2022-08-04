@@ -1,4 +1,4 @@
-# Refactoring "JAccuse game" with "5 Lines of Code" by Christen Clausen
+# Refactoring "JAccuse game" with "5 Lines of Code"
 I chose this game to exercise the 5 Lines of Code (5LOC) rather than the book's use of Typescript, as I wanted to use Python as the platform language as this is my lnaguage of choice to learn programming.  I have found wwhile attempting the refactoring that there are problems using this game due to the __tight coupling__ of the data between the different stages of execution.  
 
 # Problems encountered
@@ -34,3 +34,5 @@ This code is available at https://nostarch.com/big-book-small-python-programming
 Play the original Flash game at:
 https://homestarrunner.com/videlectrix/wheresanegg.html
 More info at: http://www.hrwiki.org/wiki/Where's_an_Egg%3F
+
+5 Lines of Code by Christen Clausen
