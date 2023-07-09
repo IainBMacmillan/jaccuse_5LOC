@@ -206,8 +206,9 @@ while True:  # Main game loop.
                 print('Thanks for playing!')
                 sys.exit()
             if response in PLACE_FIRST_LETTERS.keys():
+                currentLocation = PLACE_FIRST_LETTERS[response]
                 break
-        currentLocation = PLACE_FIRST_LETTERS[response]
+
         continue  # Go back to the start of the main game loop.
 
     # At a place; player can ask for clues.
@@ -245,6 +246,8 @@ while True:  # Main game loop.
 
     while True:  # Keep asking until a valid response is given.
         response = input('> ').upper()
+        if response == '':
+            continue  # Ask again.
         if response in 'JZT' or (response.isdecimal() and 0 < int(response) <= len(knownSuspectsAndItems)):
             break
 

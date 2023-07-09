@@ -1,0 +1,35 @@
+start with
+list of suspects
+list of items
+list of places
+
+game duration (time to solve) = 300 = 5 minutes
+number of guesses / j'accuse = 3
+Start Game Location
+
+max string length of PLACES for screen presentation purposes
+create dictionary of destinations
+    (key = 1st letter of place, value = place)
+
+create subset of liars from suspect (3 or 4)
+create a culprit from suspect
+current_location to track position in game
+
+create answers for clues (liars give false info)
+
+select subset of suspects that know about Zophie (3 or 4)
+create clues for Zophie suspects (liars give false info)
+
+in game variables
+known_suspects_and_items
+    captured when 1st attendance of PLACE or provided as clue
+    by a interviewee (suspect)
+
+visited_places
+    capture each place visited in alphabetic order to display
+    key: place, value: list (suspect, item)
+    each time returning to taxi for next desination
+
+accused_suspects
+    add to list if detective jaccuses an interviewee (suspect)
+
