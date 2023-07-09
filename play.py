@@ -1,18 +1,7 @@
-"""
-J'ACCUSE!, by Al Sweigart al@inventwithpython.com
-A mystery game of intrigue and a missing cat.
-This code is available at https://nostarch.com/big-book-small-python-programming
-Tags: extra-large, game, humor, puzzle
-"""
-
-# Play the original Flash game at:
-# https://homestarrunner.com/videlectrix/wheresanegg.html
-# More info at: http://www.hrwiki.org/wiki/Where's_an_Egg%3F
-
 import time
 import random
 import sys
-from reverse_engineering import show_clues, show_zophie_clues
+from game_data import game_cards, set_place_name_length, set_place_name_commands, control_data, set_zophie_clues
 
 # Set up the constants:
 SUSPECTS: list = ['DUKE HAUTDOG', 'MAXIMUM POWERS', 'BILL MONOPOLIS', 'SENATOR SCHMEAR', 'MRS. FEATHERTOSS',
@@ -21,37 +10,17 @@ ITEMS: list = ['FLASHLIGHT', 'CANDLESTICK', 'RAINBOW FLAG', 'HAMSTER WHEEL', 'AN
                'ONE COWBOY BOOT', 'CLEAN UNDERPANTS', '5 DOLLAR GIFT CARD']
 PLACES: list = ['ZOO', 'OLD BARN', 'DUCK POND', 'CITY HALL', 'HIPSTER CAFE', 'BOWLING ALLEY', 'VIDEO GAME MUSEUM',
                 'UNIVERSITY LIBRARY', 'ALBINO ALLIGATOR PIT']
+
+# Set up the constants:
 TIME_TO_SOLVE: int = 300  # 300 seconds (5 minutes) to solve the game.
+MAX_GUESSES: int = 3  # allowed to accuse before game ends
 
 # First letters and longest length of places are needed for menu display:
-PLACE_FIRST_LETTERS: dict = {}
-LONGEST_PLACE_NAME_LENGTH: int = 0
-place: str
-for place in PLACES:
-    PLACE_FIRST_LETTERS[place[0]] = place
-    if len(place) > LONGEST_PLACE_NAME_LENGTH:
-        LONGEST_PLACE_NAME_LENGTH = len(place)
-
-# Basic sanity checks of the constants:
-assert len(SUSPECTS) == 9
-assert len(ITEMS) == 9
-assert len(PLACES) == 9
-# First letters must be unique:
-assert len(PLACE_FIRST_LETTERS.keys()) == len(PLACES)
-
-knownSuspectsAndItems: list = []
-# visitedPlaces: Keys=places, values=strings of the suspect & item there.
-visitedPlaces: dict = {}
-currentLocation: str = 'TAXI'  # Start the game at the taxi.
-accusedSuspects: list = []  # Accused suspects won't offer clues.
-accusationsLeft = 3  # You can accuse up to 3 people.
-liars: list = random.sample(SUSPECTS, random.randint(3, 4))
-culprit: str = random.choice(SUSPECTS)
-
-# Common indexes link these; e.g. SUSPECTS[0] and ITEMS[0] are at PLACES[0].
-random.shuffle(SUSPECTS)
-random.shuffle(ITEMS)
-random.shuffle(PLACES)
+PLACE_FIRST_LETTERS: dict = set_place_name_commands()
+LONGEST_PLACE_NAME_LENGTH: int = set_place_name_length()
+DECK: list = game_cards()
+liars: list = control_data.get_liars()
+culprit: str = control_data.get_culprit()
 
 # Create data structures for clues the truth-tellers give about each item and suspect.
 # clues: Keys=suspects being asked for a clue, value="clue dictionary".
@@ -63,6 +32,7 @@ for i, interviewee in enumerate(SUSPECTS):
 
     # This "clue dictionary" has keys=items & suspects, value=the clue given.
     clues[interviewee]: dict = {}
+    clues[interviewee]['debug_liar'] = False  # Useful for debugging.
     item: str
     for item in ITEMS:  # Select clue about each item.
         if random.randint(0, 1) == 0:  # Tell where the item is:
@@ -83,6 +53,7 @@ for i, interviewee in enumerate(SUSPECTS):
 
     # This "clue dictionary" has keys=items & suspects, value=the clue given:
     clues[interviewee]: dict = {}
+    clues[interviewee]['debug_liar'] = True  # Useful for debugging.
 
     # This interviewee is a liar and gives wrong clues:
     for item in ITEMS:
@@ -113,45 +84,7 @@ for i, interviewee in enumerate(SUSPECTS):
                 if clues[interviewee][suspect] != ITEMS[SUSPECTS.index(suspect)]:
                     # Break out of the loop when wrong clue is selected.
                     break
-#  debugging the clues
-show_clues(clues=clues, suspects=SUSPECTS)
 
-# Create the data structures for clues given when asked about Zophie:
-zophieClues: dict = {}
-randomsuspects: list = random.sample(SUSPECTS, random.randint(3, 4))
-for interviewee in randomsuspects:
-    kindOfClue: int = random.randint(1, 3)
-    if kindOfClue == 1:
-        if interviewee not in liars:  # They tell you who has Zophie.
-            zophieClues[interviewee] = culprit
-        elif interviewee in liars:
-            while True:  # Select a (wrong) suspect clue.
-                zophieClues[interviewee] = random.choice(SUSPECTS)
-                if zophieClues[interviewee] != culprit:
-                    # Break out of the loop when wrong clue is selected.
-                    break
-    elif kindOfClue == 2:
-        if interviewee not in liars:  # They tell you where Zophie is.
-            zophieClues[interviewee] = PLACES[SUSPECTS.index(culprit)]
-        elif interviewee in liars:
-            while True:  # Select a (wrong) place clue.
-                zophieClues[interviewee] = random.choice(PLACES)
-                if zophieClues[interviewee] != PLACES[SUSPECTS.index(culprit)]:
-                    # Break out of the loop when wrong clue is selected.
-                    break
-    elif kindOfClue == 3:
-        if interviewee not in liars:  # They tell you what item Zophie is near.
-            zophieClues[interviewee] = ITEMS[SUSPECTS.index(culprit)]
-        elif interviewee in liars:
-            while True:
-                # Select a (wrong) item clue.
-                zophieClues[interviewee] = random.choice(ITEMS)
-                if zophieClues[interviewee] != ITEMS[SUSPECTS.index(culprit)]:
-                    # Break out of the loop when wrong clue is selected.
-                    break
-
-#  debugging the zophie clues
-show_zophie_clues(clues=zophieClues, suspects=randomsuspects)
 
 # START OF THE GAME
 print("""J'ACCUSE! (a mystery game)")
@@ -168,6 +101,12 @@ CAT in time and accuse the guilty party?
 """)
 input('Press Enter to begin...')
 
+knownSuspectsAndItems: list = []
+# visitedPlaces: Keys=places, values=strings of the suspect & item there.
+visitedPlaces: dict = {}
+currentLocation: str = 'TAXI'  # Start the game at the taxi.
+accusedSuspects: list = []  # Accused suspects won't offer clues.
+accusationsLeft: int = MAX_GUESSES  # You can accuse up to 3 people.
 
 startTime: float = time.time()
 endTime: float = startTime + TIME_TO_SOLVE
@@ -270,6 +209,7 @@ while True:  # Main game loop.
             currentLocation = 'TAXI'
 
     elif response == 'Z':  # Player asks about Zophie.
+        zophieClues: dict = set_zophie_clues()
         if thePersonHere not in zophieClues:
             print('"I don\'t know anything about ZOPHIE THE CAT."')
         elif thePersonHere in zophieClues:
