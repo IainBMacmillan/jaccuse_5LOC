@@ -1,5 +1,5 @@
 from time import time
-from game_data import set_place_name_length, set_direction_commands, SuspectProfiles, GameData
+from game_data import SuspectProfiles, GameData
 
 suspect_profiles: SuspectProfiles = SuspectProfiles()
 game_data: GameData = GameData(suspect_profiles)
@@ -12,11 +12,11 @@ TIME_TO_SOLVE: int = 300  # 300 seconds (5 minutes) to solve the game.
 MAX_GUESSES: int = 3  # allowed to accuse before game ends
 
 # First letters and longest length of places are needed for menu display:
-DIRECTION_COMMANDS: dict = set_direction_commands()
+DIRECTION_COMMANDS: dict = game_data.direction_commands
 CLUE_COMMANDS: dict = {'J': '"J\'ACCUSE!"',
                        'Z': 'Ask if they know where ZOPHIE THE CAT is',
                        'T': 'Go back to the TAXI.'}
-LONGEST_PLACE_NAME_LENGTH: int = set_place_name_length()
+LONGEST_PLACE_NAME_LENGTH: int = game_data.place_name_length
 culprit: str = suspect_profiles.culprit
 # clues = set_suspect_clues()
 clues: dict = game_data.suspect_clues

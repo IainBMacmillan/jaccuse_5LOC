@@ -125,10 +125,14 @@ def set_zophie_clues(suspect_profiles: SuspectProfiles) -> dict:
 class GameData:
     suspect_clues: dict
     zophie_clues: dict
+    direction_commands: dict
+    place_name_length: int
 
     def __init__(self, suspect_profiles: SuspectProfiles):
         self.suspect_clues = set_suspect_clues(liars=suspect_profiles.liars)
         self.zophie_clues = set_zophie_clues(suspect_profiles=suspect_profiles)
+        self.direction_commands = set_direction_commands()
+        self.place_name_length = set_place_name_length()
 
 
 class KindOfClue(Enum):
