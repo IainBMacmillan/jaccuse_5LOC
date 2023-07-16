@@ -12,7 +12,6 @@ Tags: extra-large, game, humor, puzzle
 import time
 import random
 import sys
-from reverse_engineering import show_clues, show_zophie_clues
 
 # Set up the constants:
 SUSPECTS: list = ['DUKE HAUTDOG', 'MAXIMUM POWERS', 'BILL MONOPOLIS', 'SENATOR SCHMEAR', 'MRS. FEATHERTOSS',
@@ -113,8 +112,6 @@ for i, interviewee in enumerate(SUSPECTS):
                 if clues[interviewee][suspect] != ITEMS[SUSPECTS.index(suspect)]:
                     # Break out of the loop when wrong clue is selected.
                     break
-#  debugging the clues
-show_clues(clues=clues, suspects=SUSPECTS)
 
 # Create the data structures for clues given when asked about Zophie:
 zophieClues: dict = {}
@@ -150,8 +147,6 @@ for interviewee in randomsuspects:
                     # Break out of the loop when wrong clue is selected.
                     break
 
-#  debugging the zophie clues
-show_zophie_clues(clues=zophieClues, suspects=randomsuspects)
 
 # START OF THE GAME
 print("""J'ACCUSE! (a mystery game)")
