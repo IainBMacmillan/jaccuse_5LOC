@@ -19,7 +19,7 @@ CLUE_COMMANDS: dict = {'J': '"J\'ACCUSE!"',
 LONGEST_PLACE_NAME_LENGTH: int = game_data.place_name_length
 culprit: str = suspect_profiles.culprit
 # clues = set_suspect_clues()
-clues: dict = game_data.suspect_clues
+clues: dict = game_data.witness_clues
 # zophie_clues = set_zophie_clues()
 zophie_clues: dict = game_data.zophie_clues
 

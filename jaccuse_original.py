@@ -83,7 +83,7 @@ for i, interviewee in enumerate(SUSPECTS):
     # This "clue dictionary" has keys=items & suspects, value=the clue given:
     clues[interviewee]: dict = {}
 
-    # This interviewee is a liar and gives wrong clues:
+    # This witness is a liar and gives wrong clues:
     for item in ITEMS:
         if random.randint(0, 1) == 0:
             while True:  # Select a random (wrong) place clue.
