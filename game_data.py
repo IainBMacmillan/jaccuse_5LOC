@@ -108,10 +108,10 @@ def set_zophie_clues(suspect_profiles: SuspectProfiles) -> dict:
         kind_of_clue: int = randint(1, 3)
         if kind_of_clue == KindOfClue.PLACE.value:
             zophie_clues[witness] = get_zophie_clue(witness=witness,
-                                                    table=SUSPECTS, suspect_profiles=suspect_profiles)
+                                                    table=PLACES, suspect_profiles=suspect_profiles)
         elif kind_of_clue == KindOfClue.SUSPECT.value:
             zophie_clues[witness] = get_zophie_clue(witness=witness,
-                                                    table=PLACES, suspect_profiles=suspect_profiles)
+                                                    table=SUSPECTS, suspect_profiles=suspect_profiles)
         elif kind_of_clue == KindOfClue.ITEM.value:
             zophie_clues[witness] = get_zophie_clue(witness=witness,
                                                     table=ITEMS, suspect_profiles=suspect_profiles)
